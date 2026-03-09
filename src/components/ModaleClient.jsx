@@ -503,24 +503,26 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
   async function handleDeleteEntreprise() {
     setConfirmDialog({
       message: `Supprimer définitivement "${entreprise.nom_entreprise}" et toutes ses données (contacts, projets, tâches, abonnements, notes, historique) ?`,
-      onConfirm: async () => {
+      onConfirm: () => {
         setConfirmDialog(null)
-        // Supprimer les données liées dans l'ordre
-        await supabase.from('historique').delete().eq('entreprise_id', entreprise.id)
-        await supabase.from('notes').delete().eq('entreprise_id', entreprise.id)
-        await supabase.from('taches').delete().eq('entreprise_id', entreprise.id)
-        await supabase.from('abonnements').delete().eq('entreprise_id', entreprise.id)
-        await supabase.from('projets').delete().eq('entreprise_id', entreprise.id)
-        await supabase.from('contacts').delete().eq('entreprise_id', entreprise.id)
-        const { error } = await supabase.from('entreprises').delete().eq('id', entreprise.id)
+        // Fermer immédiatement, supprimer en arrière-plan
+        const nom = entreprise.nom_entreprise
+        const id = entreprise.id
+        onClose()
+        notify(`"${nom}" supprimé`, 'error')
 
-        if (!error) {
-          notify(`"${entreprise.nom_entreprise}" supprimé`, 'error')
-          onClose()
+        ;(async () => {
+          await Promise.all([
+            supabase.from('historique').delete().eq('entreprise_id', id),
+            supabase.from('notes').delete().eq('entreprise_id', id),
+            supabase.from('taches').delete().eq('entreprise_id', id),
+            supabase.from('abonnements').delete().eq('entreprise_id', id),
+            supabase.from('projets').delete().eq('entreprise_id', id),
+            supabase.from('contacts').delete().eq('entreprise_id', id),
+          ])
+          await supabase.from('entreprises').delete().eq('id', id)
           if (onUpdate) onUpdate()
-        } else {
-          notify('Erreur lors de la suppression', 'error')
-        }
+        })()
       }
     })
   }
