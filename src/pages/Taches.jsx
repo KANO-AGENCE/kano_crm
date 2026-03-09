@@ -539,12 +539,12 @@ export default function Taches() {
                   className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 hover-card cursor-pointer ${
                     isCompleting ? 'border-green-300 bg-green-50/40' :
                     isReopening ? 'border-kano-blue/30 bg-blue-50/40' :
-                    nouvelle ? 'border-gray-300 border-t-0 bg-white' : 'border-gray-200/60 bg-white'
+                    nouvelle ? 'border-gray-300 border-t-transparent bg-white' : 'border-gray-200/60 bg-white'
                   } ${termine && !isAnimating ? 'opacity-50' : ''}`}
                 >
                   {/* Bordure haute coupée avec NOUVEAU */}
                   {nouvelle && !isAnimating && (
-                    <div className="absolute top-0 left-0 right-0 -translate-y-[0.5px] flex items-center z-10">
+                    <div className="absolute top-[-1px] left-[-1px] right-[-1px] flex items-center z-10">
                       <div className="w-3 border-t border-gray-300 rounded-tl-lg" />
                       <span className="px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-none flex-shrink-0">Nouveau</span>
                       <div className="flex-1 border-t border-gray-300 rounded-tr-lg" />
