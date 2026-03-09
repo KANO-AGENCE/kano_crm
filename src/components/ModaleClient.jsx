@@ -500,6 +500,31 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
     }
   }
 
+  async function handleDeleteEntreprise() {
+    setConfirmDialog({
+      message: `Supprimer définitivement "${entreprise.nom_entreprise}" et toutes ses données (contacts, projets, tâches, abonnements, notes, historique) ?`,
+      onConfirm: async () => {
+        setConfirmDialog(null)
+        // Supprimer les données liées dans l'ordre
+        await supabase.from('historique').delete().eq('entreprise_id', entreprise.id)
+        await supabase.from('notes').delete().eq('entreprise_id', entreprise.id)
+        await supabase.from('taches').delete().eq('entreprise_id', entreprise.id)
+        await supabase.from('abonnements').delete().eq('entreprise_id', entreprise.id)
+        await supabase.from('projets').delete().eq('entreprise_id', entreprise.id)
+        await supabase.from('contacts').delete().eq('entreprise_id', entreprise.id)
+        const { error } = await supabase.from('entreprises').delete().eq('id', entreprise.id)
+
+        if (!error) {
+          notify(`"${entreprise.nom_entreprise}" supprimé`, 'error')
+          onClose()
+          if (onUpdate) onUpdate()
+        } else {
+          notify('Erreur lors de la suppression', 'error')
+        }
+      }
+    })
+  }
+
   function openEditContact(contact) {
     setContactEnCours(contact)
     setFormContact({ prenom: contact.prenom || '', nom: contact.nom || '', email: contact.email || '', tel: contact.tel || '', contact_principal: contact.contact_principal || false })
@@ -996,6 +1021,12 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
                   <Edit2 size={14} className="text-white/50" />
                 </button>
                 <button
+                  onClick={handleDeleteEntreprise}
+                  className="p-1.5 hover:bg-white/10 rounded transition-colors"
+                >
+                  <Trash2 size={14} className="text-red-300/60" />
+                </button>
+                <button
                   onClick={() => setHeaderDeplie(!headerDeplie)}
                   className="p-1.5 hover:bg-white/10 rounded transition-colors"
                 >
@@ -1109,12 +1140,20 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
               </span>
 
               {!modeEdition ? (
-                <button
-                  onClick={() => setModeEdition(true)}
-                  className="ml-auto text-xs text-white/50 hover:text-white/70 transition-colors"
-                >
-                  Modifier les infos
-                </button>
+                <div className="ml-auto flex items-center gap-3">
+                  <button
+                    onClick={() => setModeEdition(true)}
+                    className="text-xs text-white/50 hover:text-white/70 transition-colors"
+                  >
+                    Modifier les infos
+                  </button>
+                  <button
+                    onClick={handleDeleteEntreprise}
+                    className="text-xs text-red-300/60 hover:text-red-300 transition-colors"
+                  >
+                    Supprimer
+                  </button>
+                </div>
               ) : (
                 <div className="ml-auto flex gap-2">
                   <button
