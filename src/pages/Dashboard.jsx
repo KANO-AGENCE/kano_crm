@@ -431,7 +431,7 @@ export default function Dashboard() {
                 const isAnimating = animatingId === tache.id
                 const isCompleting = isAnimating && animationType === 'complete'
                 return (
-                  <fieldset
+                  <div
                     key={tache.id}
                     onClick={() => {
                       if (nouvelle) markAsSeen(tache.id)
@@ -443,7 +443,7 @@ export default function Dashboard() {
                     }`}
                   >
                     {nouvelle && !isCompleting && (
-                      <legend className="ml-2 px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase float-left h-0 leading-[0]">Nouveau</legend>
+                      <span className="absolute top-0 left-3 -translate-y-1/2 px-1.5 bg-white text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-none">Nouveau</span>
                     )}
 
                     {/* Barre de progression animée */}
@@ -526,7 +526,7 @@ export default function Dashboard() {
                         )}
                       </div>
                     </div>
-                  </fieldset>
+                  </div>
                 )
               })}
             </div>

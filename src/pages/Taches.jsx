@@ -534,7 +534,7 @@ export default function Taches() {
                   ref={el => { rowRefs.current[tache.id] = el }}
                   className={`${termine && !isAnimating ? 'opacity-50' : ''}`}
                 >
-                  <fieldset
+                  <div
                     onClick={() => {
                       if (nouvelle) markAsSeen(tache.id)
                       if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
@@ -546,7 +546,7 @@ export default function Taches() {
                     }`}
                   >
                     {nouvelle && !isAnimating && (
-                      <legend className="ml-2 px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase float-left h-0 leading-[0]">Nouveau</legend>
+                      <span className="absolute top-0 left-3 -translate-y-1/2 px-1.5 bg-white text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-none">Nouveau</span>
                     )}
 
                   {/* Barre de progression animée */}
@@ -658,7 +658,7 @@ export default function Taches() {
                       )}
                     </div>
                   </div>
-                  </fieldset>
+                  </div>
                 </div>
               )
             }
