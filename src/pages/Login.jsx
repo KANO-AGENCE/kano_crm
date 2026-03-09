@@ -60,8 +60,7 @@ export default function Login() {
       setError('Email ou mot de passe incorrect')
       setLoading(false)
     } else {
-      navigate('/')
-      window.location.reload()
+      window.location.href = '/'
     }
   }
 

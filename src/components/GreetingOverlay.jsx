@@ -45,9 +45,15 @@ export default function GreetingOverlay({ onDone }) {
   const greeting = getGreeting(periode)
   const displayName = userName.charAt(0).toUpperCase() + userName.slice(1)
 
-  const startFly = useCallback(() => {
+  const startFly = useCallback((attempt = 0) => {
     const source = textRef.current
     const target = document.getElementById('dashboard-greeting')
+
+    // Si le Dashboard est encore en loading, attendre que l'élément cible existe
+    if (source && !target && attempt < 20) {
+      setTimeout(() => startFly(attempt + 1), 150)
+      return
+    }
 
     if (source && target) {
       const from = source.getBoundingClientRect()
