@@ -439,14 +439,16 @@ export default function Dashboard() {
                     }}
                     className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 hover-card cursor-pointer ${
                       isCompleting ? 'border-green-300 bg-green-50/40' :
-                      nouvelle ? 'border-gray-400 bg-gray-50/60' : 'border-gray-200/60 bg-white'
+                      nouvelle ? 'border-gray-300 border-t-0 bg-white' : 'border-gray-200/60 bg-white'
                     }`}
                   >
-                    {/* Badge NOUVEAU sur la bordure */}
+                    {/* Bordure haute coupée avec NOUVEAU */}
                     {nouvelle && !isCompleting && (
-                      <span className="absolute top-0 left-4 -translate-y-1/2 px-1.5 bg-gray-50 text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-[16px] z-10">
-                        Nouveau
-                      </span>
+                      <div className="absolute top-0 left-0 right-0 -translate-y-[0.5px] flex items-center z-10">
+                        <div className="w-3 border-t border-gray-300 rounded-tl-lg" />
+                        <span className="px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-none flex-shrink-0">Nouveau</span>
+                        <div className="flex-1 border-t border-gray-300 rounded-tr-lg" />
+                      </div>
                     )}
 
                     {/* Barre de progression animée */}
