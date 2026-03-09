@@ -43,6 +43,8 @@ export default function Dashboard() {
   const [lissagesActifs, setLissagesActifs] = useState([])
   const [loading, setLoading] = useState(true)
   const [undoToast, setUndoToast] = useState(null)
+  const [animatingId, setAnimatingId] = useState(null)
+  const [animationType, setAnimationType] = useState(null)
   const [seenTaches, setSeenTaches] = useState(() => {
     try { return JSON.parse(localStorage.getItem('kano_seen_taches') || '[]') } catch { return [] }
   })
@@ -100,6 +102,11 @@ export default function Dashboard() {
   }
 
   async function handleToggleTache(tache) {
+    if (animatingId) return
+
+    setAnimatingId(tache.id)
+    setAnimationType('complete')
+
     const { error } = await supabase
       .from('taches')
       .update({ statut: 'termine', date_completion: new Date().toISOString(), termine_par: userName })
@@ -115,13 +122,24 @@ export default function Dashboard() {
         description: `Tâche "${tache.titre}" marquée comme terminée`,
         utilisateur: userName
       })
-      setTachesUrgentes(prev => prev.filter(t => t.id !== tache.id))
-      fetchActiviteRecente()
+
+      notify(`"${tache.titre}" terminée`)
+
+      // Animation puis retrait
+      setTimeout(() => {
+        setTachesUrgentes(prev => prev.filter(t => t.id !== tache.id))
+        setAnimatingId(null)
+        setAnimationType(null)
+        fetchActiviteRecente()
+      }, 1200)
 
       setUndoToast({
         message: `"${tache.titre}" terminée`,
         tache
       })
+    } else {
+      setAnimatingId(null)
+      setAnimationType(null)
     }
   }
 
@@ -398,6 +416,8 @@ export default function Dashboard() {
                 const prioEff = getPrioriteEffective(tache)
                 const nouvelle = isNouvelle(tache)
                 const usr = tache.assigne_a ? UTILISATEURS.find(u => u.value === tache.assigne_a) : null
+                const isAnimating = animatingId === tache.id
+                const isCompleting = isAnimating && animationType === 'complete'
                 return (
                   <div
                     key={tache.id}
@@ -405,8 +425,31 @@ export default function Dashboard() {
                       if (nouvelle) markAsSeen(tache.id)
                       if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
                     }}
-                    className="relative bg-white rounded-lg border border-gray-200/60 shadow-sm pl-3 pr-4 py-3 overflow-hidden hover-card cursor-pointer"
+                    className={`relative bg-white rounded-lg border shadow-sm pl-3 pr-4 py-3 overflow-hidden hover-card cursor-pointer ${
+                      isCompleting ? 'border-green-300 bg-green-50/40' : 'border-gray-200/60'
+                    }`}
                   >
+                    {/* Barre de progression animée */}
+                    {isCompleting && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        <div
+                          className="absolute top-0 left-0 h-full bg-green-400/10"
+                          style={{ animation: 'slideRight 0.6s ease-out forwards' }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Badge flottant — centré */}
+                    {isCompleting && (
+                      <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                        <div className="flex items-center gap-2 px-4 py-1.5 bg-green-500 text-white rounded-full text-sm font-medium shadow-md"
+                          style={{ animation: 'popIn 0.3s ease-out 0.15s both' }}>
+                          <Check size={14} strokeWidth={3} />
+                          Terminée
+                        </div>
+                      </div>
+                    )}
+
                     {/* Assigné — coin haut droit */}
                     {usr && (
                       <span className={`absolute top-3 right-4 text-[11px] font-semibold ${usr.color}`}>
@@ -442,9 +485,18 @@ export default function Dashboard() {
                       <div className="flex items-center">
                         <button
                           onClick={(e) => { e.stopPropagation(); handleToggleTache(tache) }}
-                          className="w-[20px] h-[20px] rounded-md border-2 border-gray-300 hover:border-kano-blue flex items-center justify-center flex-shrink-0 transition-colors"
+                          disabled={!!animatingId}
+                          className={`w-[20px] h-[20px] rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+                            isCompleting
+                              ? 'border-green-500 bg-green-500 scale-125'
+                              : 'border-gray-300 hover:border-kano-blue'
+                          }`}
                           title="Marquer comme terminée"
-                        />
+                        >
+                          {isCompleting && (
+                            <Check size={14} className="text-white" style={{ animation: 'popIn 0.2s ease-out' }} />
+                          )}
+                        </button>
                       </div>
 
                       {/* Titre + client + projet — 3 lignes tronquées */}

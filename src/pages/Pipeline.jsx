@@ -227,7 +227,7 @@ export default function Pipeline() {
 
       {/* Kanban */}
       <div className="flex-1 overflow-x-auto overflow-y-hidden min-h-0 -mx-4 sm:-mx-6 lg:-mx-8 -mb-4 sm:-mb-6 lg:-mb-8 px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8 scrollbar-thin">
-        <div className="flex gap-3 h-full justify-center">
+        <div className="flex gap-3 h-full lg:justify-center">
           {colonnes.map(col => (
             <div
               key={col.id}
