@@ -544,7 +544,7 @@ export default function Taches() {
                 >
                   {/* Badge NOUVEAU sur la bordure */}
                   {nouvelle && !isAnimating && (
-                    <span className="absolute top-0 left-4 -translate-y-1/2 px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-[16px] z-10" style={{ background: 'inherit' }}>
+                    <span className="absolute top-0 left-4 -translate-y-1/2 px-1.5 bg-gray-50 text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-[16px] z-10">
                       Nouveau
                     </span>
                   )}
