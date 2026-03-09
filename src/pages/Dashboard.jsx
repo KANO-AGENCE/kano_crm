@@ -437,7 +437,7 @@ export default function Dashboard() {
                       if (nouvelle) markAsSeen(tache.id)
                       if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
                     }}
-                    className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 overflow-hidden hover-card cursor-pointer ${
+                    className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 hover-card cursor-pointer ${
                       isCompleting ? 'border-green-300 bg-green-50/40' :
                       nouvelle ? 'border-gray-400 bg-gray-50/60' : 'border-gray-200/60 bg-white'
                     }`}
@@ -451,7 +451,7 @@ export default function Dashboard() {
 
                     {/* Barre de progression animée */}
                     {isCompleting && (
-                      <div className="absolute inset-0 pointer-events-none">
+                      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
                         <div
                           className="absolute top-0 left-0 h-full bg-green-400/10"
                           style={{ animation: 'slideRight 0.6s ease-out forwards' }}
