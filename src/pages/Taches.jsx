@@ -536,20 +536,18 @@ export default function Taches() {
                     if (nouvelle) markAsSeen(tache.id)
                     if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
                   }}
-                  className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 hover-card cursor-pointer ${
-                    isCompleting ? 'border-green-300 bg-green-50/40' :
-                    isReopening ? 'border-kano-blue/30 bg-blue-50/40' :
-                    nouvelle ? 'border-gray-300 border-t-transparent bg-white' : 'border-gray-200/60 bg-white'
-                  } ${termine && !isAnimating ? 'opacity-50' : ''}`}
+                  className={`hover-card cursor-pointer ${termine && !isAnimating ? 'opacity-50' : ''}`}
                 >
-                  {/* Bordure haute coupée avec NOUVEAU */}
-                  {nouvelle && !isAnimating && (
-                    <div className="absolute top-[-1px] left-[-1px] right-[-1px] flex items-center z-10">
-                      <div className="w-3 border-t border-gray-300 rounded-tl-lg" />
-                      <span className="px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-none flex-shrink-0">Nouveau</span>
-                      <div className="flex-1 border-t border-gray-300 rounded-tr-lg" />
-                    </div>
-                  )}
+                  <fieldset
+                    className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 ${
+                      isCompleting ? 'border-green-300 bg-green-50/40' :
+                      isReopening ? 'border-kano-blue/30 bg-blue-50/40' :
+                      nouvelle ? 'border-gray-300 bg-white' : 'border-gray-200/60 bg-white'
+                    }`}
+                  >
+                    {nouvelle && !isAnimating && (
+                      <legend className="ml-2 px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase">Nouveau</legend>
+                    )}
 
                   {/* Barre de progression animée */}
                   {isCompleting && (
@@ -660,6 +658,7 @@ export default function Taches() {
                       )}
                     </div>
                   </div>
+                  </fieldset>
                 </div>
               )
             }
