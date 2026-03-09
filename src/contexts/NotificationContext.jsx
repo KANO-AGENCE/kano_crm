@@ -38,11 +38,11 @@ export function NotificationProvider({ children }) {
       {children}
 
       {/* Toasts empilés en haut à droite */}
-      <div className="fixed top-4 right-4 z-[200] flex flex-col gap-2 pointer-events-none max-w-sm w-full">
+      <div className="fixed top-4 left-4 right-4 z-[200] flex flex-col items-end gap-2 pointer-events-none">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="pointer-events-auto animate-toast-in"
+            className="pointer-events-auto animate-toast-in max-w-sm w-full sm:w-auto"
           >
             <div className={`bg-white border rounded-lg shadow-lg px-4 py-3 flex items-center gap-3 ${
               toast.type === 'error' ? 'border-red-200' : 'border-gray-200'

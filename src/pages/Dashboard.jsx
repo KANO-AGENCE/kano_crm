@@ -444,7 +444,7 @@ export default function Dashboard() {
                   >
                     {/* Badge NOUVEAU sur la bordure */}
                     {nouvelle && !isCompleting && (
-                      <span className="absolute top-0 left-4 -translate-y-1/2 px-2 py-0 bg-gray-500 text-white text-[9px] font-bold tracking-widest uppercase rounded-sm leading-[16px] z-10">
+                      <span className="absolute top-0 left-4 -translate-y-1/2 px-1.5 bg-white text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-[16px] z-10">
                         Nouveau
                       </span>
                     )}
