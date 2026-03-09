@@ -182,8 +182,9 @@ export default function Taches() {
         }, type === 'complete' ? 400 : 200)
       }, type === 'complete' ? 800 : 500)
 
-      // Afficher le toast d'annulation
+      // Notification + toast d'annulation
       if (type === 'complete') {
+        notify(`"${tache.titre}" terminée`)
         setUndoToast({
           key: Date.now(),
           message: `"${tache.titre}" terminée`,

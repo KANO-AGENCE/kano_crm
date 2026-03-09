@@ -383,6 +383,7 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
           description: 'Suppression d\'une note',
           utilisateur: userName
         })
+        notify('Note supprimée', 'error')
         fetchNotes()
         setConfirmDialog(null)
       }
@@ -518,6 +519,7 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
       if (!error) {
         setContacts(prev => prev.map(c => c.id === contactEnCours.id ? { ...c, ...formContact } : c))
         await supabase.from('historique').insert({ entreprise_id: entreprise.id, type_action: 'modification', entite: 'contact', description: `Contact "${formContact.prenom} ${formContact.nom}" modifié`, utilisateur: userName })
+        notify(`Contact "${formContact.prenom} ${formContact.nom}" modifié`)
         if (onUpdate) onUpdate()
       }
     } else {
@@ -525,6 +527,7 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
       if (!error && data) {
         setContacts(prev => [...prev, data])
         await supabase.from('historique').insert({ entreprise_id: entreprise.id, type_action: 'creation', entite: 'contact', description: `Nouveau contact : "${formContact.prenom} ${formContact.nom}"`, utilisateur: userName })
+        notify(`Contact "${formContact.prenom} ${formContact.nom}" ajouté`)
         if (onUpdate) onUpdate()
       }
     }
@@ -540,6 +543,7 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
         if (!error) {
           setContacts(prev => prev.filter(c => c.id !== contact.id))
           await supabase.from('historique').insert({ entreprise_id: entreprise.id, type_action: 'suppression', entite: 'contact', description: `Contact "${contact.prenom} ${contact.nom}" supprimé`, utilisateur: userName })
+          notify(`Contact "${contact.prenom} ${contact.nom}" supprimé`, 'error')
           if (onUpdate) onUpdate()
         }
         setConfirmDialog(null)
@@ -847,6 +851,7 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
       }, type === 'complete' ? 1000 : 500)
 
       if (type === 'complete') {
+        notify(`"${tache.titre}" terminée`)
         setUndoToast({ key: Date.now(), message: `"${tache.titre}" terminée`, tacheId: tache.id })
       }
     } else {
@@ -891,6 +896,7 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
       description: `Suppression de la tâche "${tacheData?.titre}"`,
       utilisateur: userName
     })
+    notify(`Tâche "${tacheData?.titre}" supprimée`, 'error')
     if (onUpdate) onUpdate()
   }
 

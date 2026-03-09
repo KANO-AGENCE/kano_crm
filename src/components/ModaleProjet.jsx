@@ -6,9 +6,11 @@ import UndoToast from './UndoToast'
 import { PRIORITE_COLORS, PRIORITE_LABELS } from '../lib/constants'
 import { useUsers } from '../contexts/UsersContext'
 import { useAuth } from '../contexts/AuthContext'
+import { useNotification } from '../contexts/NotificationContext'
 
 export default function ModaleProjet({ projet, entreprise, onClose, onUpdate }) {
   const { userName } = useAuth()
+  const { notify } = useNotification()
   const { utilisateurs: UTILISATEURS } = useUsers()
   const [onglet, setOnglet] = useState('a_faire')
   const [confirmDialog, setConfirmDialog] = useState(null)
@@ -106,7 +108,7 @@ export default function ModaleProjet({ projet, entreprise, onClose, onUpdate }) 
 
   async function handleCreateTache() {
     if (!formData.titre.trim()) {
-      alert('Le titre est obligatoire')
+      notify('Le titre est obligatoire', 'error')
       return
     }
 
@@ -136,18 +138,18 @@ export default function ModaleProjet({ projet, entreprise, onClose, onUpdate }) 
         utilisateur: userName
       })
 
+      notify(`Tâche "${formData.titre}" créée`)
       fetchTaches()
       resetForm()
       if (onUpdate) onUpdate()
     } else {
-      console.error('Erreur création tâche:', error)
-      alert('Erreur lors de la création')
+      notify('Erreur lors de la création', 'error')
     }
   }
 
   async function handleUpdateTache() {
     if (!formData.titre.trim()) {
-      alert('Le titre est obligatoire')
+      notify('Le titre est obligatoire', 'error')
       return
     }
 
@@ -178,12 +180,12 @@ export default function ModaleProjet({ projet, entreprise, onClose, onUpdate }) 
         utilisateur: userName
       })
 
+      notify(`Tâche "${formData.titre}" modifiée`)
       fetchTaches()
       resetForm()
       if (onUpdate) onUpdate()
     } else {
-      console.error('Erreur modification tâche:', error)
-      alert('Erreur lors de la modification')
+      notify('Erreur lors de la modification', 'error')
     }
   }
 
@@ -228,6 +230,7 @@ export default function ModaleProjet({ projet, entreprise, onClose, onUpdate }) 
       }, type === 'complete' ? 800 : 400)
 
       if (type === 'complete') {
+        notify(`"${tache.titre}" terminée`)
         setUndoToast({ key: Date.now(), message: `"${tache.titre}" terminée`, tacheId: tache.id, ancienStatut })
       }
 
@@ -258,6 +261,8 @@ export default function ModaleProjet({ projet, entreprise, onClose, onUpdate }) 
             description: `Suppression de la tâche "${tache?.titre}"`,
             utilisateur: userName
           })
+
+          notify(`Tâche "${tache?.titre}" supprimée`, 'error')
 
           setTimeout(() => {
             setTaches(prev => prev.filter(t => t.id !== id))
