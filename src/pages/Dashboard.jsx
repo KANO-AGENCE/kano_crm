@@ -92,10 +92,22 @@ export default function Dashboard() {
       .order('date_limite', { ascending: true, nullsFirst: false })
 
     if (data) {
+      const PRIO_RANK_FETCH = { urgente: 3, haute: 2, moyenne: 1, basse: 0 }
       const urgentes = data.filter(t => {
         const isUser = !t.assigne_a || t.assigne_a === userName
         const isUrgent = t.priorite === 'urgente' || t.priorite === 'haute' || (t.date_limite && t.date_limite <= aujourdhui)
         return isUser && isUrgent
+      }).sort((a, b) => {
+        // 1. Priorité décroissante
+        const pa = PRIO_RANK_FETCH[a.priorite] ?? 1
+        const pb = PRIO_RANK_FETCH[b.priorite] ?? 1
+        if (pa !== pb) return pb - pa
+        // 2. Date limite croissante (proches d'abord, null à la fin)
+        if (a.date_limite && b.date_limite) return a.date_limite.localeCompare(b.date_limite)
+        if (a.date_limite) return -1
+        if (b.date_limite) return 1
+        // 3. Date de création décroissante (récent d'abord)
+        return (b.created_at || '').localeCompare(a.created_at || '')
       })
       setTachesUrgentes(urgentes.slice(0, 8))
     }
@@ -425,10 +437,18 @@ export default function Dashboard() {
                       if (nouvelle) markAsSeen(tache.id)
                       if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
                     }}
-                    className={`relative bg-white rounded-lg border shadow-sm pl-3 pr-4 py-3 overflow-hidden hover-card cursor-pointer ${
-                      isCompleting ? 'border-green-300 bg-green-50/40' : 'border-gray-200/60'
+                    className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 overflow-hidden hover-card cursor-pointer ${
+                      isCompleting ? 'border-green-300 bg-green-50/40' :
+                      nouvelle ? 'border-gray-400 bg-gray-50/60' : 'border-gray-200/60 bg-white'
                     }`}
                   >
+                    {/* Badge NOUVEAU sur la bordure */}
+                    {nouvelle && !isCompleting && (
+                      <span className="absolute -top-[1px] left-4 px-2 py-0 bg-gray-400 text-white text-[9px] font-bold tracking-widest uppercase rounded-b-sm leading-[16px]">
+                        Nouveau
+                      </span>
+                    )}
+
                     {/* Barre de progression animée */}
                     {isCompleting && (
                       <div className="absolute inset-0 pointer-events-none">
@@ -501,12 +521,7 @@ export default function Dashboard() {
 
                       {/* Titre + client + projet — 3 lignes tronquées */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-medium leading-snug text-kano-blue truncate">{tache.titre}</h3>
-                          {nouvelle && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
-                          )}
-                        </div>
+                        <h3 className="font-medium leading-snug text-kano-blue truncate">{tache.titre}</h3>
                         {tache.entreprises && (
                           <p className="text-xs text-gray-600 font-medium truncate mt-0.5">
                             {tache.entreprises.nom_entreprise}

@@ -536,12 +536,19 @@ export default function Taches() {
                     if (nouvelle) markAsSeen(tache.id)
                     if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
                   }}
-                  className={`relative bg-white rounded-lg border border-gray-200/60 shadow-sm pl-3 pr-4 py-3 overflow-hidden hover-card cursor-pointer ${
+                  className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 overflow-hidden hover-card cursor-pointer ${
                     isCompleting ? 'border-green-300 bg-green-50/40' :
                     isReopening ? 'border-kano-blue/30 bg-blue-50/40' :
-                    ''
+                    nouvelle ? 'border-gray-400 bg-gray-50/60' : 'border-gray-200/60 bg-white'
                   } ${termine && !isAnimating ? 'opacity-50' : ''}`}
                 >
+                  {/* Badge NOUVEAU sur la bordure */}
+                  {nouvelle && !isAnimating && (
+                    <span className="absolute -top-[1px] left-4 px-2 py-0 bg-gray-400 text-white text-[9px] font-bold tracking-widest uppercase rounded-b-sm leading-[16px]">
+                      Nouveau
+                    </span>
+                  )}
+
                   {/* Barre de progression animée */}
                   {isCompleting && (
                     <div className="absolute inset-0 pointer-events-none">
