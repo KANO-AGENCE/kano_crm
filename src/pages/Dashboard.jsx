@@ -443,7 +443,7 @@ export default function Dashboard() {
                     }`}
                   >
                     {nouvelle && !isCompleting && (
-                      <legend className="ml-2 px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase">Nouveau</legend>
+                      <legend className="ml-2 px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase float-left h-0 leading-[0]">Nouveau</legend>
                     )}
 
                     {/* Barre de progression animée */}
