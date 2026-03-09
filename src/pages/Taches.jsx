@@ -542,11 +542,11 @@ export default function Taches() {
                     className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 hover-card cursor-pointer ${
                       isCompleting ? 'border-green-300 bg-green-50/40' :
                       isReopening ? 'border-kano-blue/30 bg-blue-50/40' :
-                      nouvelle ? 'border-gray-300 bg-white' : 'border-gray-200/60 bg-white'
+                      nouvelle ? 'border-kano-blue/30 bg-white' : 'border-gray-200/60 bg-white'
                     }`}
                   >
                     {nouvelle && !isAnimating && (
-                      <span className="absolute top-0 left-3 -translate-y-1/2 px-1.5 bg-white text-gray-400 text-[9px] font-semibold tracking-wider uppercase leading-none">Nouveau</span>
+                      <span className="absolute top-0 left-3 -translate-y-1/2 px-1.5 bg-white text-kano-blue text-[9px] font-semibold tracking-wider uppercase leading-none">Nouveau</span>
                     )}
 
                   {/* Barre de progression animée */}
