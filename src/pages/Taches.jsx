@@ -532,14 +532,14 @@ export default function Taches() {
                 <div
                   key={tache.id}
                   ref={el => { rowRefs.current[tache.id] = el }}
-                  onClick={() => {
-                    if (nouvelle) markAsSeen(tache.id)
-                    if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
-                  }}
-                  className={`hover-card cursor-pointer ${termine && !isAnimating ? 'opacity-50' : ''}`}
+                  className={`${termine && !isAnimating ? 'opacity-50' : ''}`}
                 >
                   <fieldset
-                    className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 ${
+                    onClick={() => {
+                      if (nouvelle) markAsSeen(tache.id)
+                      if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
+                    }}
+                    className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 hover-card cursor-pointer ${
                       isCompleting ? 'border-green-300 bg-green-50/40' :
                       isReopening ? 'border-kano-blue/30 bg-blue-50/40' :
                       nouvelle ? 'border-gray-300 bg-white' : 'border-gray-200/60 bg-white'

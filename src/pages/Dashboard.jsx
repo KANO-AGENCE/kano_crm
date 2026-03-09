@@ -431,23 +431,20 @@ export default function Dashboard() {
                 const isAnimating = animatingId === tache.id
                 const isCompleting = isAnimating && animationType === 'complete'
                 return (
-                  <div
+                  <fieldset
                     key={tache.id}
                     onClick={() => {
                       if (nouvelle) markAsSeen(tache.id)
                       if (tache.entreprises?.id) openClientModal(tache.entreprises.id, { onglet: 'taches', tacheId: tache.id })
                     }}
-                    className={`hover-card cursor-pointer ${isCompleting ? '' : ''}`}
+                    className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 hover-card cursor-pointer ${
+                      isCompleting ? 'border-green-300 bg-green-50/40' :
+                      nouvelle ? 'border-gray-300 bg-white' : 'border-gray-200/60 bg-white'
+                    }`}
                   >
-                   <fieldset
-                      className={`relative rounded-lg border shadow-sm pl-3 pr-4 py-3 ${
-                        isCompleting ? 'border-green-300 bg-green-50/40' :
-                        nouvelle ? 'border-gray-300 bg-white' : 'border-gray-200/60 bg-white'
-                      }`}
-                    >
-                      {nouvelle && !isCompleting && (
-                        <legend className="ml-2 px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase">Nouveau</legend>
-                      )}
+                    {nouvelle && !isCompleting && (
+                      <legend className="ml-2 px-1.5 text-gray-400 text-[9px] font-semibold tracking-wider uppercase">Nouveau</legend>
+                    )}
 
                     {/* Barre de progression animée */}
                     {isCompleting && (
@@ -529,8 +526,7 @@ export default function Dashboard() {
                         )}
                       </div>
                     </div>
-                    </fieldset>
-                  </div>
+                  </fieldset>
                 )
               })}
             </div>
