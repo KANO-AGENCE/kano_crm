@@ -37,8 +37,8 @@ export function NotificationProvider({ children }) {
     <NotificationContext.Provider value={{ notify, historique, clearHistorique }}>
       {children}
 
-      {/* Toasts empilés en bas à droite */}
-      <div className="fixed bottom-4 right-4 z-[200] flex flex-col-reverse gap-2 pointer-events-none max-w-sm w-full">
+      {/* Toasts empilés en haut à droite */}
+      <div className="fixed top-4 right-4 z-[200] flex flex-col gap-2 pointer-events-none max-w-sm w-full">
         {toasts.map((toast) => (
           <div
             key={toast.id}

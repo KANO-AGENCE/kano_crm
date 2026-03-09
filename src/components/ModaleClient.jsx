@@ -419,11 +419,11 @@ export default function ModaleClient({ entreprise, onClose, onUpdate, defaultOng
         description: `Nouvelle tâche : "${insertData.titre}"`,
         utilisateur: userName
       })
+      notify(`Tâche "${insertData.titre}" créée — ${entreprise.nom_entreprise}`)
       fetchTaches()
       resetForm()
       if (onUpdate) onUpdate()
     } else {
-      console.error('Erreur création tâche:', error.message, error.details, error.hint)
       notify('Erreur lors de la création : ' + error.message, 'error')
     }
   }
